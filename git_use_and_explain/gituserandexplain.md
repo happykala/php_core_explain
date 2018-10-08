@@ -57,6 +57,131 @@ fastcgi的运行原理示意图：
 词法分析的示例-[词法、语法分析示例代码](./examplecode/example1.php)
 
 
+**php的变量和数据类型**
+-
+变量的三个基本组成部分:  
+- 名称
+- 类型
+- 值
+
+从类型的角度来划分变成语言主要分为以下的几类：  
+- 静态语言类型，比如C/java
+- 动态语言类型 php/python
+- 无类型语言 汇编语言
+
+php中绝大部分的语言类型的实现使用了哈希表处理，在其中解决哈希表冲突使用的是链表  
+
+**常量的定义和实现**
+-
+在php中定义常量可以使用define函数和const修饰符，define是函数，const语言结构  
+在[解析代号表](http://php.net/manual/zh/tokens.php)中可以找到const的解析代号,解析代号如下：  
+![](./picture/7.png)
+
+首先说明一下二者的区别：
+- const是一种语言结构，define是函数，后者可以通过第三个参数来确定是否对大小写敏感，true表示大小写不敏感，默认false
+``` php 
+define('PI',3.141592654, true)
+```
+- const简单易读，编译的时候比define快
+- const可以在类中使用，用于定义类的成员变量，定义之后不可以修改，define不可在类中使用，可以定义全局变量
+
+``` php 
+class Myclass{
+    const pi = 3.141592654;
+    //常量显示输出函数
+    function showConstant(){
+        echo self::pi;
+        echo constant('pi');
+    }
+
+}
+```
+
+- const在编译的时候定义，需要在最顶端的作用域，不能再函数、循环、if判断中使用，define是函数，能够调用函数的地方都可以使用
+``` php 
+$boolFlag = true;
+if($boolFlag){
+    const test = 'hello world'; //定非法
+}
+
+if($boolFlag){
+    define('test', 'hello world');//定义合法
+}
+```
+
+- const只能够使用普通变量名，define可以使用表达式
+- const只能定义静态常量，define可以是任意表达式
+
+接下来说明define的函数实现过程  
+常量的内部实现结构如下  
+``` c 
+typedef struct _zend_constant {
+	zval value;//类似于变量的zval结构
+	zend_string *name;//常量的名字
+	int flags;//大小写敏感的标记
+	int module_number;//木块编号
+} zend_constant;
+```
+
+具体的函数实现路径在<font color='red'>Zend/zend_builtin_functions.c文件</font>中，函数名是<font color='red'>ZEND_FUNCTION(define)</font>  
+``` c 
+    ZVAL_DUP(&c.value, val); //赋值
+	zval_ptr_dtor(&val_free);
+register_constant:
+	c.flags = case_sensitive; /* non persistent */
+	c.name = zend_string_copy(name); /* 常量名称 */
+	c.module_number = PHP_USER_CONSTANT; /* 模块标号 */
+	if (zend_register_constant(&c) == SUCCESS) {
+		RETURN_TRUE;
+	} else {
+		RETURN_FALSE;
+	}
+```
+上述代码是对常量接口定义中属性的赋值过程，赋值完毕之后将对应的结构体注册到常量列表中，下面的代码是大小写敏感的处理
+``` c 
+    zend_string *name; //常量名称
+	zval *val, val_free; //值
+	zend_bool non_cs = 0; //记录大小的临时变量
+	int case_sensitive = CONST_CS; // 大小写是否敏感，默认为1
+	zend_constant c;
+
+	//省略了部分代码
+
+	if (non_cs) {
+		case_sensitive = 0;
+	}
+```
+除了CONST_CS标记，常量的flags字段通常还可以用CONST_PERSISTENT和CONST_CT_SUBST  CONST_PERSISTENT标识当前的常量需要持久化  
+CONST_CT_SUBST标识编译的时候可以被替换在PHP内核中这些常量包括：TRUE、FALSE、NULL、ZEND_THREAD_SAFE和ZEND_DEBUG_BUILD五个
+
+通过define()函数定义的常量的模块编号都是PHP_USER_CONSTANT，这表示是用户定义的常量。 除此之外我们在平时使用较多的常量：如错误报告级别E_ALL, E_WARNING等常量就有点不同了。 这些是PHP内置定义的常量，他们属于标准常量。  
+
+
+魔术常量
+|标题|标题
+|:---|:---
+\_\_LINE__ | 文件中的当前行号
+\_\_FILE__ | 文件的完整路径和文件名。如果用在被包含文件中，则返回被包含的文件名。自 PHP 4.0.2 起，FILE 总是包含一个绝对路径（如果是符号连接，则是解析后的绝对路径），而在此之前的版本有时会包含一个相对路径。
+\_\_DIR__ |文件所在的目录。如果用在被包括文件中，则返回被包括的文件所在的目录。它等价于 dirname(FILE)。除非是根目录，否则 目录中名不包括末尾的斜杠。（PHP 5.3.0中新增）
+\_\_FUNCTION__ | 函数名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该函数被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写 字母的
+\_\_CLASS__ | 类的名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该类被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写字母的
+\_\_METHOD__ | 类的方法名（PHP 5.0.0 新加）。返回该方法被定义时的名字（区分大小写）。
+\_\_NAMESPACE__ | 当前命名空间的名称（大小写敏感）。这个常量是在编译时定义的（PHP 5.3.0 新增）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  
