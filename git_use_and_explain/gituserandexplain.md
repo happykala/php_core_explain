@@ -1,16 +1,11 @@
 **克隆指定的代码库**
 -
 
-git clone https://github.com/happykala/php_core_explain.git
-
-在github上克隆下PHP的官方版本
-
-git clone https://github.com/php/php-src.git
-
-![](./picture/2.png '克隆github上的PHP版本库')
-
-切换到PHP7.0的版本
-
+git clone https://github.com/happykala/php_core_explain.git  
+在github上克隆下PHP的官方版本  
+git clone https://github.com/php/php-src.git  
+![](./picture/2.png '克隆github上的PHP版本库')  
+切换到PHP7.0的版本  
 ![](./picture/3.png '切换到7.0的版本')
 
 单线程的SAPI的执行过程:
@@ -158,7 +153,7 @@ CONST_CT_SUBST标识编译的时候可以被替换在PHP内核中这些常量包
 
 
 魔术常量
-|标题|标题
+|魔术常量的名称|描述
 |:---|:---
 \_\_LINE__ | 文件中的当前行号
 \_\_FILE__ | 文件的完整路径和文件名。如果用在被包含文件中，则返回被包含的文件名。自 PHP 4.0.2 起，FILE 总是包含一个绝对路径（如果是符号连接，则是解析后的绝对路径），而在此之前的版本有时会包含一个相对路径。
@@ -167,6 +162,20 @@ CONST_CT_SUBST标识编译的时候可以被替换在PHP内核中这些常量包
 \_\_CLASS__ | 类的名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该类被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写字母的
 \_\_METHOD__ | 类的方法名（PHP 5.0.0 新加）。返回该方法被定义时的名字（区分大小写）。
 \_\_NAMESPACE__ | 当前命名空间的名称（大小写敏感）。这个常量是在编译时定义的（PHP 5.3.0 新增）
+
+**预定义常量**
+-
+
+
+**静态变量**
+-
+静态变量大致分为以下三类：  
+- 静态全局变量 全局使用，除非使用unset释放掉，否则一直在程序y运行过程中存在
+- 静态局部变量 函数中定义的静态变量，会保持到当前函数被下一次调用的时候
+- 静态成员变量 在类中定义的静态变量，可以被所有实例使用到
+
+
+
 
 
 
