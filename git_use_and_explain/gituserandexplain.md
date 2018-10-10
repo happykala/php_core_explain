@@ -174,6 +174,36 @@ CONST_CT_SUBST标识编译的时候可以被替换在PHP内核中这些常量包
 - 静态局部变量 函数中定义的静态变量，会保持到当前函数被下一次调用的时候
 - 静态成员变量 在类中定义的静态变量，可以被所有实例使用到
 
+#### 局部静态变量的使用和分析
+下面是一个在函数中定义局部静态变量的例子
+``` php 
+function test(){
+    static $i = 0;
+    $i++;
+    echo $i.' ';
+}
+test();
+test();
+test();
+```
+上面例子最终的输出结果是1 2 3，说明静态变量$i被保持到了当前函数下一次执行的时候  
+词法、语法分析和执行过程说明如下：
+词法分析在<font color='red'>Zend/zend_language_scanner.l</font>文件中static关键字对应的解析符号如下：  
+``` c
+<ST_IN_SCRIPTING>"static" {
+    return T_STATIC;
+} 
+```
+
+语法分析在<font color='red'>Zend/zend_language_parser.y</font>文件中可以找到解析符号T_STATIC对应的中间代码生成函数zend_do_fetch_static_variable，这个函数用来生成opcode中间代码  
+
+中间代码的执行在<font color='red'>Zend/zend_vm_opcodes.h</font>文件中找到对应的宏处理  
+
+在上述的实现过程中底层为每一个函数对应的局部静态变量单独开辟了存储位置
+
+
+
+
 
 
 
