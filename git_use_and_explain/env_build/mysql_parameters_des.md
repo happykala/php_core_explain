@@ -1,4 +1,3 @@
-#  mysql源码安装参数解释
 <style>
     table th{
         background: rgba(158,188,226,0.2);
@@ -14,6 +13,7 @@
         background: grey;
     }
 </style>
+#  mysql源码安装参数解释
 |参数|说明|
 |:------|:------|
 -DCMAKE_INSTALL_PREFIX | 指向mysql安装目录
