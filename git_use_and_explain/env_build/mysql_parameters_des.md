@@ -1,18 +1,3 @@
-<style>
-    table th{
-        background: rgba(158,188,226,0.2);
-        font-weight:bold
-    }
-    table td:nth-child(2n+1){
-        white-space:nowrap;
-    }
-    table tbody tr:nth-child(2n){
-        background: rgba(158,188,226,0.12);
-    }
-    table tr:hover{
-        background: grey;
-    }
-</style>
 #  mysql源码安装参数解释
 |参数|说明|
 |:------|:------|
