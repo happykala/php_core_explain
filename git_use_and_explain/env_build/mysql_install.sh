@@ -22,7 +22,7 @@ apt-get install --yes \
 
 # 使用cmake编译安装(mysql5.5之后的版本需要使用cmake编译安装，所以上面的依赖也安装了cmake)
 # 编译安装一个最大的好处是能够控制安装参数，里面参数的可以参考https://blog.csdn.net/sanbingyutuoniao123/article/details/74544634
-# 
+# 也可以参考本文件同目录下的mysql_parameters_des.md文件
 cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
       -DSYSCONFDIR=/etc \
       -DMYSQL_UNIX_ADDR=/tmp/mysql.sock \
@@ -36,8 +36,43 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
       -DENABLED_LOCAL_INFILE=1 \
       -DMYSQL_DATADIR=/usr/local/mysql/data \
       -DMYSQL_USER=mysql \
-      -DWITH_DEBUG=0;    
+      -DWITH_DEBUG=0;   
+# 编译完毕之后安装
+make && make install && make clean;
 
+# 常用的命令建立软连接
+sudo ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18;
+sudo ln -s /usr/local/mysql/bin/mysql /usr/bin;
+sudo ln -s /usr/local/mysql/bin/mysqladmin /usr/bin;
+
+# 新增一个用户用户mysql数据库的初始化,新增用户的命令有两个
+# sudo adduser xxx 会新增一个用户，且在home目录下新建一个xxx文件夹，sudo useradd xxx 则只是新建用户不新建文件夹
+sudo useradd mysql;
+# 为用户配置密码
+sudo passwd mysql;
+# 把mysql的安装和数据存储目录的操作权限给到当前创建的用户
+chown -R mysql:mysql /usr/local/mysql;
+chown -R mysql:mysql /usr/local/mysql/data;
+
+# 初始化数据库
+sudo /usr/local/mysql/scripts/mysql_install_db --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data --user=mysql 
+
+# 启动mysql的服务
+# 再次之前可以查看一下编译安装的etc文件夹下有没有my.cnf的配置文件，没有的情况下可以将mysql安装目录下的配置文件拷贝一份过去
+sudo /usr/local/mysql/bin/mysqld --user=mysql      
+
+# 创建root用户并为之设置密码
+/usr/local/mysql/bin/mysqladmin -u root password 'root'
+
+# 启动mysql的客户端
+/usr/local/mysql/bin/mysql -u root -p
+# 输入密码 
+
+#设置环境变量
+vim /etc/profile;
+# 在文件最后面添加export PATH=$PATH:/usr/local/mysql/bin
+# 立即生效
+source /etc/profile
 
 
 
