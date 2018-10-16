@@ -86,3 +86,41 @@ cp php.ini-development /usr/local/php/etc/php.ini;
 # ?>
 
 # 访问服务器ip的80端口可以查看php的配置情况
+
+
+# 下面的配置是在版面mod_php的基础上修改而来的
+# 上面是配置php作为php的模块运行，php运行的方式还有cgi和fastcgi
+# 参考下这个里面说的原理过程https://blog.csdn.net/QFire/article/details/78680717?locationNum=1&fps=1
+# 下面说明fastcgi的配置方式
+# 1、修改apache的配置文件，将mod_php模式的加载修改为fcgi模式的模块加载
+# LoadModule proxy_module modules/mod_proxy.so
+# LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so
+# apache2.4之后新增的专门针对fcgi的模块mod_proxy_fcgi
+# 屏蔽掉mod_php的加载
+# LoadModule php7_module modules/libphp7.so
+# 2、复制php下的fpm配置
+# cp /usr/local/php/etc/php-fpm.conf.default php-fpm.conf
+# cp /usr/local/php/etc/php-fpm.d/www.conf.default www.conf
+# 3、修改apache的配置文件开启url重写和虚拟主机配置文件
+# LoadModule rewrite_module modules/mod_rewrite.so
+# Include /etc/httpd//extra/httpd-vhosts.conf
+# 这两句在配置文件中一般都有，删除注释即可
+# 4、修改虚拟主机配置文件
+# vim /etc/httpd/extra/httpd-vhosts.conf
+#<VirtualHost *:80>
+#    DocumentRoot  "/www/web/forum"
+#    ServerName www.forum.com
+#    ProxyRequests Off
+#    ProxyPassMatch ^/(.*\.php)$ fcgi://127.0.0.1:9000/www/web/forum/$1
+#    <Directory "/www/web/forum">
+#        Options none
+#        AllowOverride none
+#        Require all granted
+#    </Directory>
+#</VirtualHost>
+#上面的/www/web/forum修改为自己对应的代码部署目录
+# 5、启动fpm并重启apache
+# /usr/local/php/sbin/php-fpm
+# /usr/local/httpd/bin/apachectl restart
+
+
