@@ -6,11 +6,13 @@ tar -zxvf php-7.2.11.tar.gz
 
 # 安装必要的依赖，依赖根据配置过程中出现的错误做适当的修改
 # 这个对应解决的错误是configure: error: cURL version 7.10.5 or later is required to compile php with cURL support
-sudo wget https://curl.haxx.se/download/curl-7.20.0.tar.gz;
-sudo tar -xzvf curl-7.20.0.tar.gz;
-cd curl-7.20.0;
-./configure;
-make && make install && make clean;
+# sudo wget http://curl.haxx.se/download/curl-7.44.0.tar.gz;
+# sudo tar -xzvf curl-7.44.0.tar.gz;
+# cd curl-7.44.0;
+# ./configure --prefix=/usr/local/curl --with-gssapi --enable-tls-srp --with-libmetalink --with-ssl=/usr/local/ssl;
+# make && make install && make clean;
+# 使用这个也可以解决，且比源码安装的更好，源码安装的有可能不支持https
+sudo apt-get install libcurl4-gnutls-dev
 # 出现这个错误configure: error: Cannot find OpenSSL's <evp.h>，但是openssl已经安装了，在ubuntu下还要安装这个库libssl-dev
 apt-get install libssl-dev;
 # 错误configure: error: freetype-config not found.
