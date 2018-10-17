@@ -20,3 +20,9 @@ php composer-setup.php --install-dir=/usr/local/composer
 没有对应的目录则创建，安装参数可以[参考](https://getcomposer.org/download/)
 
 
+### 5、将安装文件移动到指定位置并这只系统变量
+mv /usr/local/composer/composer.phar /usr/local/bin/composer
+
+vim /etc/profile
+在其中增加export PATH=$PATH:/usr/local/bin
+source /etc/profile
