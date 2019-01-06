@@ -32,11 +32,11 @@ class simpleStack {
     /**
      * @abstract 在堆栈的头压进新的元素
      */
-    public function push(){
+    public function push($value){
         if(count($this->stack) >= $this->size){
             return false;
         }
-        return array_push($this->stack);
+        return array_push($this->stack,$value);
     }
 
 
