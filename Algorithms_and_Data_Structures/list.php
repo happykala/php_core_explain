@@ -66,7 +66,4 @@ class DirectList{
     public function Size(){
         return count($this->list);
     }
-
-    
-
 }
