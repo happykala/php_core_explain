@@ -37,4 +37,6 @@
 //集合的应用场景 标签 sadd为用户添加标签，为标签添加用户/社交 sadd sinter/随机数sadd/spop,srandmembers
 
 //redis的持久化
+//RDB和AOF两种方式
+
 ?>
