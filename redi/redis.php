@@ -36,6 +36,34 @@
 //集合间操作的时候同时保存到指定的键中 sinterstore destion key key1... 同理并集和差集是一样的
 //集合的应用场景 标签 sadd为用户添加标签，为标签添加用户/社交 sadd sinter/随机数sadd/spop,srandmembers
 
+
+//有序集合 有序集合在集合的基础上为每一个脂新增了分数属性
+//操作 插入zadd key score element/获得有序集合的个数 zcard key/获得某个成员的分数 zscore key member
+//操作 计算成员的排名 zrank key member zrevrank key member
+//操作 删除集合中的成员 zrem key member
+//操作 增加成员的分数  zincby key score member
+//操作 获取指定范围的集合元素和对应的分数(排名范围) zrange key start end [withscores]/zrevrange key start end [withscores]
+//操作 （分数范围）zrangescore key min max [withscores]/zrevrangescore key max min [withscores]
+//操作 返回指定分数范围内的元素的个数 zcount key min max 删除指定分数范围内的元素 zremrangebyscore key min max 
+//集合间的操作 zinterstore des numbers key[key1....] weight[weight1....] [ag{sum|max|min}]/zunionstore des numbers key[key1...] weight[weight1...] [ag{sum|max|min}]
+
+
+//键的管理
+//重命名 rename key newkey
+//过期设置expire time times/timestap
+//随机返回一个键值 randomkey
+
+//键值的迁移 dump + restore  dump key restore key 0 'xxxxx'
+//redis1.restore(key,0,redis2.dump(key));
+//键值的迁移 migrate ip port key|'' db_index timeout [copy] [replace] [keys]
+//键的遍历 keys 这个会引起阻塞/ scan 渐进式的遍历
+//persist 删除键的过期时间
+
+
+//redis的慢日志分析
+//配置文件或者动态设置两个参数showlog-log-slow-than和showlog-max-len
+
+
 //redis的持久化
 //RDB和AOF两种方式
 
