@@ -1,5 +1,88 @@
 ### 单实例安装和启动
-java 安装参考 https://www.cnblogs.com/freescience/p/7272070.html
+
+#### 安装java开发环境
+1、下载jdk8  
+下载地址：https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+
+2、解压之后移动到opt目录下
+```
+tar -zxf jdk-8u201-linux-x64.tar.gz
+sudo mv jdk1.8.0_201 /opt/
+```
+
+3、修改环境变量  
+```
+vim ~/.bashrc
+```
+在最后面加上如下的代码(具体的路径地址根据实际情况做调整)：
+```
+export JAVA_HOME=/opt/jdk1.8.0_201
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+```
+刷新立即生效
+```
+source ~/.bashrc
+```
+
+4、版本效果  
+![java版本命令效果](./pic/1.png)
+
+### 安装elasticsearch
+
+1、下载源码包
+下载地址（或者自己去百度搜索并官网下载）：https://www.elastic.co/downloads/elasticsearch
+
+![es下载页](./pic/2.png)  
+
+2、解压安装  
+下载linux版本，将下载的文件上传到linux中，解压并放置到自己常用的软件安装目录中，解压后的文件目录如下：  
+![es安装文件目录](./pic/3.png)  
+
+3、启动es  
+进入bin目录，使用`elasticsearch`命令来启动：  
+es不建议使用root用户启动，会出现下面的错误:  
+![使用root用户启动es出现的错误](./pic/4.png)  
+
+切换到非root用户之后该用户没有es的安装目录操作权限的时候会出现下面的错误：  
+![非root用户没有文件操作权限错误](./pic/5.png)  
+
+``
+chown -R 用户名:用户名 文件目录
+``  
+使用上面的命令来给与当前用户权限，启动的时候会输出一些日志信息，注意看下面的日志输出，表示启动成功  
+![es启动成功](./pic/6.png)  
+
+启动的时候还有可能出现下面的问题而启动不了：  
+![vm.max_map_count太小导致启动不了](./pic/8.png)  
+
+进入到root用户设置一下,后面这个262144请根据日志提示来设置    
+```
+sysctl -w vm.max_map_count=262144
+```
+检查值是否设置好了  
+```
+sysctl -a | grep "vm.max_map_count"
+```
+
+
+4、浏览器访问es  
+http://ip:9200，其中ip表示es安装服务器的ip地址，现在直接访问应该是访问失败的，需要修改配置文件中的外网访问ip限制，在config目录下有elasticsearch.yml文件其中的`network.host`属性放开并设置ip限制为`0.0.0.0`,修改图如下：  
+![修改network.host配置](./pic/7.png)   
+启动之后再控制台使用curl命令访问localhost:9200  
+![控制台curl命令访问](./pic/10.png)  
+浏览器访问：  
+![浏览器访问](./pic/11.png)
+
+
+5、常用命令（逐步补充,命令是相对目录而言的，使用的使用请注意实际调整）  
+ |命令|说明|
+ |:--|:--|
+ |./elasticsearch|启动命令|
+ |nohup./elasticsearch&|后台启动命令|
+
+
 
 解决elasticsearc不能浏览器访问参考：
 https://www.jianshu.com/p/658961f707d8
@@ -59,22 +142,3 @@ http://ip:port/<索引>/<类型>/<文档id>
 
 常用的http动作：
 GET/PUT/POST/DELETE
-
-
-
-1、php基础语法
-
-2、mysql数据库基础
-
-3、缓存redis
-
-4、全文查询处理
-es
-
-5、大流量高并发的处理
-
-6、消息系统的使用
-
-7、算法
-
-8、前端能力
